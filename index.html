@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rythu Bazaar Online - Fresh Produce Direct from Farm</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rythu-green': '#047857', // Deep Emerald Green (Agriculture)
+                        'rythu-brown': '#9a3412', // Terracotta/Brown (Earth)
+                        'rythu-accent': '#fcd34d', // Amber/Yellow (Harvest/Sun)
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Use Inter font and custom styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        /* Custom style for product card hover animation */
+        .product-card-hover {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+            border-color: #fcd34d; /* rythu-accent */
+        }
+        .sidebar-show {
+            transform: translateX(0) !important;
+        }
+        .login-modal-show {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+        /* Style for active filter button */
+        .filter-btn.active {
+            background-color: #9a3412; /* rythu-brown */
+            color: white;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    
+    <!-- Header / Navigation (Tabs: Browse, Filter, Order, Cart, Login) -->
+    <header class="bg-white shadow-xl sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            
+            <!-- Logo/Site Title -->
+            <a href="#" class="text-3xl font-extrabold text-rythu-green flex items-center">
+                <span class="text-4xl mr-2 text-rythu-accent">🌾</span>
+                Rythu Bazaar
+            </a>
+
+            <!-- Core Navigation Tabs (Browse / Filter / Order) -->
+            <nav class="hidden md:flex space-x-6 lg:space-x-10 font-semibold">
+                <a href="#produce" class="text-gray-600 hover:text-rythu-brown transition duration-200 py-1 border-b-2 border-transparent hover:border-rythu-accent">Browse Products</a>
+                <a href="#categories" class="text-gray-600 hover:text-rythu-brown transition duration-200 py-1 border-b-2 border-transparent hover:border-rythu-accent">Filter by Crop</a>
+                <a href="#order" class="text-rythu-green hover:text-rythu-brown transition duration-200 py-1 border-b-2 border-transparent hover:border-rythu-accent">Place Order</a>
+            </nav>
+
+            <!-- Interactive Tabs (Cart and Login) -->
+            <div class="flex items-center space-x-4">
+                
+                <!-- Cart Tab/Switch -->
+                <button id="cart-switch" class="relative p-2 rounded-full bg-rythu-accent/30 text-rythu-green hover:bg-rythu-accent transition duration-200 shadow-md group">
+                    <!-- Shopping Cart Icon (Unicode for simplicity) -->
+                    <span class="text-2xl">🛒</span>
+                    <!-- Cart Item Counter (Dynamic) -->
+                    <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rythu-brown rounded-full">
+                        0
+                    </span>
+                    <span class="sr-only">Shopping Cart</span>
+                </button>
+
+                <!-- Login Tab/Switch -->
+                <button id="login-switch" class="flex items-center space-x-2 py-2 px-4 bg-rythu-brown text-white rounded-lg shadow-md hover:bg-rythu-brown/90 transition duration-200">
+                    <!-- User Icon (Unicode for simplicity) -->
+                    <span class="text-lg">👤</span>
+                    <span class="hidden sm:inline">Log In / Register</span>
+                    <span class="sr-only">Log In or Register</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-rythu-green/90 text-white overflow-hidden py-20 md:py-32 lg:py-40">
+        <div class="absolute inset-0">
+            <!-- Background image placeholder (representing a vibrant Indian marketplace/farm) -->
+            <img src="https://placehold.co/1920x800/085a3c/ffffff?text=Direct+from+Rythu+Field" 
+                 alt="Vibrant Indian farm field with fresh produce" 
+                 class="w-full h-full object-cover opacity-30"
+                 onerror="this.onerror=null; this.src='https://placehold.co/1920x800/085a3c/ffffff?text=Rythu+Bazaar+Fresh';">
+        </div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 text-rythu-accent">
+                Freshness Direct from Farmer.
+            </h1>
+            <p class="text-xl lg:text-2xl mb-10 max-w-4xl mx-auto text-gray-100">
+                Supporting local farmers and delivering the day's harvest to your doorstep—guaranteed purity, fair price.
+            </p>
+            <div class="space-x-4">
+                <a href="#produce" class="inline-block bg-rythu-accent text-rythu-brown font-bold text-xl py-3 px-10 rounded-xl shadow-2xl hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
+                    View Today's Harvest
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition Section -->
+    <section id="values" class="py-16 md:py-20 bg-rythu-accent/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl lg:text-4xl font-bold text-center mb-12 text-rythu-brown">Why Choose Rythu Bazaar Online?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Value Card 1: Farmer Price -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-rythu-green transition duration-300 hover:shadow-xl text-center">
+                    <span class="text-4xl text-rythu-green mb-4 block">💰</span>
+                    <h3 class="text-xl font-semibold mb-3">Fair Price for Farmers</h3>
+                    <p class="text-gray-600">Eliminating middlemen to ensure 100% of the market rate goes directly to the rythu (farmer).</p>
+                </div>
+
+                <!-- Value Card 2: Quality -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-rythu-green transition duration-300 hover:shadow-xl text-center">
+                    <span class="text-4xl text-rythu-green mb-4 block">🌶️</span>
+                    <h3 class="text-xl font-semibold mb-3">Guaranteed Quality</h3>
+                    <p class="text-gray-600">Mandatory quality check at the collection point. Freshness assured, or your money back.</p>
+                </div>
+
+                <!-- Value Card 3: Local Focus -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-rythu-green transition duration-300 hover:shadow-xl text-center">
+                    <span class="text-4xl text-rythu-green mb-4 block">🛵</span>
+                    <h3 class="text-xl font-semibold mb-3">Hyper-Local Delivery</h3>
+                    <p class="text-gray-600">Fast and reliable same-day delivery service within the local municipality area.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Produce Section (Browse/Filter Content Area) -->
+    <section id="produce" class="py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl lg:text-4xl font-bold text-center mb-12 text-rythu-brown">Today's Best Picks from the Mandi</h2>
+            
+            <!-- Filter Bar (part of the Browse/Filter functionality) -->
+            <div id="categories" class="flex justify-center flex-wrap gap-3 mb-10">
+                <button data-filter="all" class="filter-btn active px-5 py-2 text-sm rounded-full bg-rythu-brown text-white shadow-lg transition hover:bg-rythu-brown/80">All Products</button>
+                <button data-filter="vegetable" class="filter-btn px-5 py-2 text-sm rounded-full bg-gray-200 text-rythu-green shadow-sm transition hover:bg-rythu-accent/50">Vegetables (కూరగాయలు)</button>
+                <button data-filter="fruit" class="filter-btn px-5 py-2 text-sm rounded-full bg-gray-200 text-rythu-green shadow-sm transition hover:bg-rythu-accent/50">Fruits (పండ్లు)</button>
+                <button data-filter="spice" class="filter-btn px-5 py-2 text-sm rounded-full bg-gray-200 text-rythu-green shadow-sm transition hover:bg-rythu-accent/50">Spices (మసాలా)</button>
+                <button data-filter="greens" class="filter-btn px-5 py-2 text-sm rounded-full bg-gray-200 text-rythu-green shadow-sm transition hover:bg-rythu-accent/50">Greens (ఆకుకూరలు)</button>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Product Card 1: Tomato (టమోటా) - ID 1 -->
+                <div data-category="vegetable" class="product-card bg-white rounded-xl shadow-lg overflow-hidden product-card-hover hover:border-rythu-accent border-2 border-transparent">
+                    <img src="https://images.unsplash.com/photo-1524593166156-312f362cada0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dG9tYXRvZXN8ZW58MHx8MHx8fDA%3D" alt="Fresh local tomatoes" class="w-full h-48 object-cover opacity-95">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-rythu-brown mb-1">Local Tomato (టమోటా)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Hand-picked, slightly tart variety perfect for curries and sambar.</p>
+                        <div class="flex justify-between items-center mt-2">
+                             <span class="text-lg font-bold text-rythu-green">₹ 25.00 / kg</span>
+                            <button data-product-id="1" class="add-to-cart-btn bg-rythu-green text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-green-800 transition">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 2: Chilli (మిరపకాయలు) - ID 2 -->
+                <div data-category="vegetable" class="product-card bg-white rounded-xl shadow-lg overflow-hidden product-card-hover hover:border-rythu-accent border-2 border-transparent">
+                    <img src="https://images.unsplash.com/photo-1576763595295-c0371a32af78?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JlZW4lMjBjaGlsbGllc3xlbnwwfHwwfHx8MA%3D%3D" alt="Green Chillis" class="w-full h-48 object-cover opacity-95">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-rythu-brown mb-1">Green Chillis (మిరపకాయలు)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Medium heat variety, essential for daily cooking. Farm-fresh batch.</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-lg font-bold text-rythu-green">₹ 60.00 / 500g</span>
+                            <button data-product-id="2" class="add-to-cart-btn bg-rythu-green text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-green-800 transition">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3: Mango (మామిడి పండు) - ID 3 -->
+                <div data-category="fruit" class="product-card bg-white rounded-xl shadow-lg overflow-hidden product-card-hover hover:border-rythu-accent border-2 border-transparent">
+                    <img src="https://images.unsplash.com/photo-1713273576831-a81cb528853a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fG1hbmdvZXN8ZW58MHx8MHx8fDA%3D"alt="Seasonal ripe mangoes" class="w-full h-48 object-cover opacity-95">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-rythu-brown mb-1">Seasonal Mangoes (మామిడి పండు)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Sweet, fragrant Banganapalli variety. Limited stock, seasonal.</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-lg font-bold text-rythu-green">₹ 150.00 / kg</span>
+                            <button data-product-id="3" class="add-to-cart-btn bg-rythu-green text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-green-800 transition">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Card 5: Bananas (అరటిపండ్లు) - ID 5 -->
+                <div data-category="fruit" class="product-card bg-white rounded-xl shadow-lg overflow-hidden product-card-hover hover:border-rythu-accent border-2 border-transparent">
+                    <img src="https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmFuYW5hc3xlbnwwfHwwfHx8MA%3D%3D" alt="Fresh local bananas" class="w-full h-48 object-cover opacity-95">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-rythu-brown mb-1">Fresh Bananas (అరటిపండ్లు)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Naturally ripened, sweet, and nutritious. Great for daily consumption.</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-lg font-bold text-rythu-green">₹ 40.00 / dozen</span>
+                            <button data-product-id="5" class="add-to-cart-btn bg-rythu-green text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-green-800 transition">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 6: Apple (ఆపిల్) - ID 6 -->
+                <div data-category="fruit" class="product-card bg-white rounded-xl shadow-lg overflow-hidden product-card-hover hover:border-rythu-accent border-2 border-transparent">
+                    <img src="https://plus.unsplash.com/premium_photo-1667049292983-d2524dd0ef08?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YXBwbGVzfGVufDB8fDB8fHww" alt="Local apples" class="w-full h-48 object-cover opacity-95">
+                    <div class="p-5">
+                        <h3 class="text-xl font-semibold text-rythu-brown mb-1">Local Apple (ఆపిల్)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Crisp texture and sweet-tart flavor. High-altitude produce.</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-lg font-bold text-rythu-green">₹ 180.00 / kg</span>
+                            <button data-product-id="6" class="add-to-cart-btn bg-rythu-green text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-green-800 transition">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="order" class="text-center mt-16">
+                <a href="#" class="inline-block bg-rythu-brown text-rythu-accent font-extrabold text-xl py-4 px-10 rounded-xl shadow-lg hover:bg-rythu-brown/90 transition duration-300 transform hover:scale-[1.02]">
+                    Review Cart and Order Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logistics/Delivery Area CTA -->
+    <section id="delivery" class="py-12 bg-rythu-green/95 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl font-bold mb-4">Check Delivery Availability</h2>
+            <p class="text-lg mb-6 text-gray-200">
+                Enter your area Pincode (Postal code) to confirm same-day delivery options.
+            </p>
+            <form class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <input type="text" placeholder="Enter 6-digit Pincode" required maxlength="6"
+                       class="w-full sm:w-64 p-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-rythu-accent shadow-inner">
+                <button type="submit" class="bg-rythu-accent text-rythu-brown font-bold py-3 px-6 rounded-lg shadow-xl hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
+                    Check
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-rythu-brown text-gray-200 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 pb-8 border-b border-rythu-green/50">
+                
+                <!-- Rythu Info -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Our Bazaar</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-rythu-accent transition">Our Mission</a></li>
+                        <li><a href="#" class="hover:text-rythu-accent transition">Become a Partner Farmer</a></li>
+                        <li><a href="#" class="hover:text-rythu-accent transition">Careers</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Support -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Help Desk</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-rythu-accent transition">FAQs</a></li>
+                        <li><a href="#" class="hover:text-rythu-accent transition">Delivery & Returns</a></li>
+                        <li><a href="#" class="hover:text-rythu-accent transition">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Languages/Region -->
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="font-bold text-lg mb-4 text-white">Local Connect</h4>
+                    <p class="text-sm">Language: English / తెలుగు</p>
+                    <p class="text-sm">Support: 1800-RYTHU-01</p>
+                    <div class="flex space-x-4 mt-3 text-2xl">
+                        <!-- Social Media Icons (Unicode) -->
+                        <a href="#" class="text-white hover:text-rythu-accent transition">🐦</a>
+                        <a href="#" class="text-white hover:text-rythu-accent transition">💬</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-8 text-center text-sm text-gray-400">
+                &copy; 2025 Rythu Bazaar Online. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden transition-opacity duration-300">
+        <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+            <!-- Header -->
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-rythu-green">Your Harvest Cart 🛒</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-rythu-brown text-2xl font-bold">✖</button>
+            </div>
+            
+            <!-- Cart Items List -->
+            <div id="cart-items-container" class="p-5 flex-grow overflow-y-auto space-y-4">
+                <!-- Items rendered here by JavaScript -->
+                <p class="text-center text-gray-500 mt-10" id="empty-cart-message">Your cart is empty. Start browsing our fresh produce!</p>
+            </div>
+
+            <!-- Footer / Checkout -->
+            <div id="cart-footer" class="p-5 border-t border-gray-200">
+                <div class="flex justify-between font-bold text-lg mb-4">
+                    <span>Total:</span>
+                    <span id="cart-total">₹ 0.00</span>
+                </div>
+                <a href="#order" id="checkout-btn" class="w-full block text-center bg-rythu-accent text-rythu-brown font-extrabold py-3 rounded-lg shadow-lg hover:bg-yellow-400 transition duration-200">
+                    Proceed to Checkout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/OTP Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm transform transition-all duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="login-title" class="text-2xl font-bold text-rythu-brown">Login with Mobile</h3>
+                <button id="close-login" class="text-gray-500 hover:text-rythu-brown text-xl font-bold">✖</button>
+            </div>
+            
+            <form id="login-form">
+                
+                <!-- Phone Input State (Default) -->
+                <div id="phone-stage">
+                    <label for="phone-input" class="block text-sm font-medium text-gray-700 mb-2">Enter 10-digit Mobile Number:</label>
+                    <input type="tel" id="phone-input" maxlength="10" placeholder="e.g., 9876543210" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-rythu-green focus:border-rythu-green mb-4 text-center text-lg tracking-wider">
+                    <p id="phone-error" class="text-red-500 text-sm mb-2 hidden">Please enter a valid 10-digit number.</p>
+                </div>
+
+                <!-- OTP Input State (Hidden initially) -->
+                <div id="otp-stage" class="hidden">
+                    <p class="text-sm text-center text-gray-600 mb-4">OTP sent to: <span id="otp-phone-display" class="font-bold text-rythu-green"></span></p>
+                    <label for="otp-input" class="block text-sm font-medium text-gray-700 mb-2">Enter 6-digit OTP:</label>
+                    <input type="number" id="otp-input" maxlength="6" placeholder="e.g., 123456" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-rythu-green focus:border-rythu-green mb-4 text-center text-xl tracking-widest">
+                    <p id="otp-error" class="text-red-500 text-sm mb-2 hidden">Incorrect or expired OTP.</p>
+                    <p id="resend-timer" class="text-sm text-center text-gray-500 mb-4">Resend in 30s</p>
+                </div>
+
+                <button type="submit" id="login-submit-btn" class="w-full bg-rythu-green text-white font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition duration-200">
+                    Get OTP
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Local Tomato (టమోటా)", price: 25.00, unit: "/ kg" },
+            { id: 2, name: "Green Chillis (మిరపకాయలు)", price: 60.00, unit: "/ 500g" },
+            { id: 3, name: "Seasonal Mangoes (మామిడి పండు)", price: 150.00, unit: "/ kg" },
+            { id: 4, name: "Fresh Curd (పెరుగు)", price: 50.00, unit: "/ L" },
+            { id: 5, name: "Fresh Bananas (అరటిపండ్లు)", price: 40.00, unit: "/ dozen" },
+            { id: 6, name: "Local Apple (ఆపిల్)", price: 180.00, unit: "/ kg" },
+        ];
+        let cart = [];
+        let loginState = 'phone'; // 'phone', 'otp', 'success'
+        let currentPhone = '';
+        const MOCK_OTP = '123456';
+        let resendTimer = null;
+        const RESEND_DELAY = 30; // seconds
+
+        const cartCountElement = document.getElementById('cart-count');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartTotalElement = document.getElementById('cart-total');
+        const cartModal = document.getElementById('cart-modal');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        
+        const loginModal = document.getElementById('login-modal');
+        const loginForm = document.getElementById('login-form');
+        const loginTitle = document.getElementById('login-title');
+        const phoneStage = document.getElementById('phone-stage');
+        const otpStage = document.getElementById('otp-stage');
+        const phoneInput = document.getElementById('phone-input');
+        const otpInput = document.getElementById('otp-input');
+        const phoneError = document.getElementById('phone-error');
+        const otpError = document.getElementById('otp-error');
+        const loginSubmitBtn = document.getElementById('login-submit-btn');
+        const otpPhoneDisplay = document.getElementById('otp-phone-display');
+        const resendTimerElement = document.getElementById('resend-timer');
+
+
+        // --- Cart Functions ---
+
+        const updateCartDisplay = () => {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountElement.textContent = totalItems;
+            
+            if (totalItems > 0) {
+                cartCountElement.classList.remove('hidden');
+                document.getElementById('checkout-btn').classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                cartCountElement.classList.add('hidden');
+                document.getElementById('checkout-btn').classList.add('opacity-50', 'pointer-events-none');
+            }
+            renderCartItems();
+        };
+
+        const renderCartItems = () => {
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-gray-500 mt-10">Your cart is empty. Start browsing our fresh produce!</p>';
+                cartTotalElement.textContent = '₹ 0.00';
+                return;
+            }
+
+            let total = 0;
+            let html = '';
+
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                if (!product) return;
+
+                const itemTotal = product.price * item.quantity;
+                total += itemTotal;
+                
+                // Emoji logic updated to include new products (5 & 6)
+                let emoji;
+                switch (product.id) {
+                    case 1: emoji = '🍅'; break;
+                    case 2: emoji = '🌶️'; break;
+                    case 3: emoji = '🥭'; break;
+                    case 4: emoji = '🥛'; break;
+                    case 5: emoji = '🍌'; break;
+                    case 6: emoji = '🍎'; break;
+                    default: emoji = '📦';
+                }
+
+                html += `
+                    <div class="flex items-center space-x-3 p-3 border-b border-gray-100 last:border-b-0">
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-2xl shadow-inner flex-shrink-0">
+                            ${emoji}
+                        </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-rythu-green">${product.name}</p>
+                            <p class="text-xs text-gray-500">₹ ${product.price.toFixed(2)} ${product.unit}</p>
+                        </div>
+                        
+                        <!-- Quantity Controls -->
+                        <div class="flex items-center space-x-1 flex-shrink-0">
+                            <button data-id="${product.id}" data-action="decrease" class="qty-btn text-rythu-brown hover:bg-gray-200 w-6 h-6 rounded-full font-bold transition">
+                                -
+                            </button>
+                            <span class="w-5 text-center text-sm font-semibold">${item.quantity}</span>
+                            <button data-id="${product.id}" data-action="increase" class="qty-btn text-rythu-brown hover:bg-gray-200 w-6 h-6 rounded-full font-bold transition">
+                                +
+                            </button>
+                        </div>
+                        
+                        <!-- Total and Delete Button -->
+                        <div class="text-right flex flex-col items-end w-20">
+                            <span class="text-rythu-brown font-semibold text-sm">₹ ${itemTotal.toFixed(2)}</span>
+                            <button data-id="${product.id}" data-action="delete" class="delete-btn text-red-500 hover:text-red-700 text-sm mt-1">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItemsContainer.innerHTML = html;
+            cartTotalElement.textContent = `₹ ${total.toFixed(2)}`;
+            
+            // Re-attach event listeners after rendering new HTML
+            document.querySelectorAll('.qty-btn').forEach(button => {
+                button.addEventListener('click', handleQuantityChange);
+            });
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDeleteItem);
+            });
+        };
+
+        const addToCart = (productId) => {
+            const id = parseInt(productId);
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push({ id: id, quantity: 1 });
+            }
+            updateCartDisplay();
+        };
+        
+        const handleQuantityChange = (e) => {
+            const id = parseInt(e.currentTarget.dataset.id);
+            const action = e.currentTarget.dataset.action;
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+
+            if (existingItemIndex === -1) return;
+
+            if (action === 'increase') {
+                cart[existingItemIndex].quantity += 1;
+            } else if (action === 'decrease') {
+                cart[existingItemIndex].quantity -= 1;
+                
+                // Remove item if quantity drops to zero
+                if (cart[existingItemIndex].quantity <= 0) {
+                    cart = cart.filter((_, index) => index !== existingItemIndex);
+                }
+            }
+            updateCartDisplay();
+        };
+
+        const handleDeleteItem = (e) => {
+            const id = parseInt(e.currentTarget.dataset.id);
+            // Completely remove the item regardless of quantity
+            cart = cart.filter(item => item.id !== id);
+            updateCartDisplay();
+        };
+
+
+        const openCart = () => {
+            cartModal.classList.remove('hidden');
+            // Force reflow for transition
+            requestAnimationFrame(() => {
+                cartSidebar.classList.add('sidebar-show');
+            });
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            renderCartItems();
+        };
+
+        const closeCart = () => {
+            cartSidebar.classList.remove('sidebar-show');
+            setTimeout(() => {
+                cartModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300); // Match transition duration
+        };
+
+        // --- Login/OTP Functions ---
+
+        const startResendTimer = (duration) => {
+            let timer = duration;
+            resendTimerElement.innerHTML = `Resend in ${timer}s`;
+            resendTimerElement.classList.remove('text-rythu-brown', 'font-bold', 'cursor-pointer', 'hover:underline');
+            resendTimerElement.classList.add('text-gray-500');
+
+            if (resendTimer) clearInterval(resendTimer);
+
+            resendTimer = setInterval(() => {
+                timer--;
+                if (timer > 0) {
+                    resendTimerElement.innerHTML = `Resend in ${timer}s`;
+                } else {
+                    clearInterval(resendTimer);
+                    resendTimerElement.innerHTML = `Resend OTP`;
+                    resendTimerElement.classList.remove('text-gray-500');
+                    resendTimerElement.classList.add('text-rythu-brown', 'font-bold', 'cursor-pointer', 'hover:underline');
+                    resendTimerElement.onclick = () => {
+                        // Resend mock OTP
+                        startResendTimer(RESEND_DELAY);
+                        // In a real app, this would trigger the OTP API again
+                    };
+                }
+            }, 1000);
+        };
+
+        const openLoginModal = () => {
+            loginState = 'phone';
+            phoneInput.value = '';
+            otpInput.value = '';
+            phoneError.classList.add('hidden');
+            otpError.classList.add('hidden');
+            
+            // Set initial state
+            loginTitle.textContent = 'Login or Register';
+            phoneStage.classList.remove('hidden');
+            otpStage.classList.add('hidden');
+            loginSubmitBtn.textContent = 'Get OTP';
+
+            loginModal.classList.remove('hidden', 'opacity-0');
+            loginModal.classList.add('login-modal-show', 'opacity-100');
+            document.body.style.overflow = 'hidden';
+            phoneInput.focus();
+        };
+
+        const closeLoginModal = () => {
+            loginModal.classList.remove('login-modal-show', 'opacity-100');
+            loginModal.classList.add('opacity-0');
+            // Clear any active timers
+            if (resendTimer) clearInterval(resendTimer);
+            
+            setTimeout(() => {
+                loginModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        };
+
+        const handleLoginFlow = (e) => {
+            e.preventDefault();
+            phoneError.classList.add('hidden');
+            otpError.classList.add('hidden');
+
+            if (loginState === 'phone') {
+                currentPhone = phoneInput.value.trim();
+                if (currentPhone.length !== 10 || isNaN(currentPhone)) {
+                    phoneError.textContent = "Please enter a valid 10-digit number.";
+                    phoneError.classList.remove('hidden');
+                    return;
+                }
+                
+                // Simulate OTP sent
+                loginState = 'otp';
+                loginTitle.textContent = 'Verify OTP';
+                phoneStage.classList.add('hidden');
+                otpStage.classList.remove('hidden');
+                loginSubmitBtn.textContent = 'Verify & Log In';
+                otpPhoneDisplay.textContent = `+91 ${currentPhone}`;
+                otpInput.focus();
+
+                // Start Resend Timer
+                startResendTimer(RESEND_DELAY);
+                
+            } else if (loginState === 'otp') {
+                const enteredOtp = otpInput.value.trim();
+
+                if (enteredOtp === MOCK_OTP) {
+                    // Successful Login
+                    alert(`Login Successful! Welcome back, user ${currentPhone}.`);
+                    closeLoginModal();
+                    // In a real application, set auth token here
+                } else {
+                    otpError.textContent = "The entered OTP is incorrect. Try mock OTP: 123456";
+                    otpError.classList.remove('hidden');
+                }
+            }
+        };
+
+        // --- Filtering Functions (NEW) ---
+
+        const applyFilter = (filter) => {
+            const productCards = document.querySelectorAll('.product-card');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            // Update active button style
+            filterButtons.forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-gray-200', 'text-rythu-green');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('bg-gray-200', 'text-rythu-green');
+                }
+            });
+
+            // Handle visibility
+            productCards.forEach(card => {
+                const category = card.dataset.category;
+                
+                if (filter === 'all' || category === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        };
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial render
+            updateCartDisplay();
+            
+            // Event Listeners for "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.productId;
+                    addToCart(productId);
+                });
+            });
+
+            // Event Listeners for Cart Sidebar/Modal
+            document.getElementById('cart-switch').addEventListener('click', openCart);
+            document.getElementById('close-cart').addEventListener('click', closeCart);
+            
+            // Close cart modal when clicking outside the sidebar
+            cartModal.addEventListener('click', (e) => {
+                if (e.target.id === 'cart-modal') {
+                    closeCart();
+                }
+            });
+
+            // Handle Checkout button click to close cart and navigate
+            document.getElementById('checkout-btn').addEventListener('click', closeCart);
+            
+            // Event Listeners for Login Modal
+            document.getElementById('login-switch').addEventListener('click', openLoginModal);
+            document.getElementById('close-login').addEventListener('click', closeLoginModal);
+            loginModal.addEventListener('click', (e) => {
+                if (e.target.id === 'login-modal') {
+                    closeLoginModal();
+                }
+            });
+
+            loginForm.addEventListener('submit', handleLoginFlow);
+
+            // --- Filter Event Listeners ---
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    applyFilter(e.currentTarget.dataset.filter);
+                });
+            });
+
+            // Initialize with 'All Produce' filter applied
+            applyFilter('all');
+        });
+    </script>
+</body>
+</html>
